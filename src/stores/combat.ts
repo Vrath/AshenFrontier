@@ -89,34 +89,59 @@ export const useCombatStore = defineStore('combat', {
        handleSlotClick(heroIdOrNull: string | undefined, location: string, slotIndex?: number){
             //check if a hero is selected
             if (this.selectedHero) {
-                // A hero is already selected; try to place it
-                if (location === 'battlefield' && !heroIdOrNull) {
-                    // Target is an empty battlefield slot - safe to place
-                    this.roster = this.roster.filter(id => id !== this.selectedHero);
-                    this.battlefield[slotIndex!] = this.selectedHero;
-                    if (this.selectedHeroSource === "battlefield" && this.selectedHeroSlot !== undefined){
-                        this.battlefield[this.selectedHeroSlot] = undefined;
+                // A hero is selected
+                if (this.selectedHeroSlot !== undefined && slotIndex !== undefined && this.selectedHeroSource !== undefined) {
+                    if (!heroIdOrNull) {
+                        // Target is empty
+                        this.moveHero(this.selectedHero, this.selectedHeroSource, this.selectedHeroSlot, location, slotIndex)
+                    } else {
+                        // Target is occupied
+                        this.swapHeroes(this.selectedHero, this.selectedHeroSource, this.selectedHeroSlot, heroIdOrNull, location, slotIndex)
                     }
-                } else if (location === 'battlefield' && heroIdOrNull) {
-                    // Target is a hero on battlefield - swap them
-                    
-                } else {
-                    // Target is a hero in roster - swap them
-                } 
-                this.selectedHero = undefined;
-                this.selectedHeroSource = undefined;
-                this.selectedHeroSlot = undefined;
-            } else {
-                // No hero selected yet - remember which one we clicked
-                this.selectedHero = heroIdOrNull;
-                this.selectedHeroSource = location;
-                if (slotIndex !== undefined){
-                    this.selectedHeroSlot = slotIndex;
                 }
+                this.clearSelection()
+                } else {
+                // No hero selected yet
+                this.selectedHero = heroIdOrNull
+                this.selectedHeroSource = location
+                this.selectedHeroSlot = slotIndex
             }
             if (!this.roster.includes(undefined)) {
                 this.roster.push(undefined);
             }
+        },
+       moveHero(sourceHeroId: string, sourceLocation: string, sourceSlot: number, targetLocation: string, targetSlot: number) {
+                //clear the source location
+                if (sourceLocation === 'battlefield') {
+                    this.battlefield[sourceSlot] = undefined
+                } else {
+                    this.roster[sourceSlot] = undefined
+                }
+                //put the hero in target location
+                if (targetLocation === 'battlefield') {
+                    this.battlefield[targetSlot] = sourceHeroId
+                } else {
+                    this.roster[targetSlot] = sourceHeroId
+                }
+            },
+        swapHeroes(sourceHeroId: string, sourceLocation: string, sourceSlot: number, targetHeroId: string, targetLocation: string, targetSlot: number){
+                //put target hero in source location
+                if (sourceLocation === 'battlefield') {
+                    this.battlefield[sourceSlot] = targetHeroId;
+                } else {
+                    this.roster[sourceSlot] = targetHeroId;
+                }
+                //put the hero in target location
+                if (targetLocation === 'battlefield') {
+                    this.battlefield[targetSlot] = sourceHeroId
+                } else {
+                    this.roster[targetSlot] = sourceHeroId
+                }
+        },
+        clearSelection(){
+            this.selectedHero = this.selectedHeroSource = this.selectedHeroSlot = undefined;
         }
+
     }
+
 })
