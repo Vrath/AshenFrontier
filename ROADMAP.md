@@ -56,10 +56,10 @@ Update CLAUDE.md "Current phase" every time you move forward.
 
 **Done when:**
 - [X] Slots are components that display hero data (name, health etc) or "Empty Slot"
-- [ ] Dragging a hero from roster to slot places them
-- [ ] Dragging a hero between slots swaps them
-- [ ] Dragging a hero off the grid returns them to roster
-- [ ] Visual feedback while dragging (highlight valid slots)
+- [X] Dragging a hero from roster to slot places them
+- [X] Dragging a hero between slots swaps them
+- [X] Dragging a hero off the grid returns them to roster
+- [ ] Visual feedback while dragging (highlight valid slots) - POSTPONED TO UI POLISH
 
 ---
 
