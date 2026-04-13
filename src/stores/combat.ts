@@ -122,12 +122,9 @@ export const useCombatStore = defineStore('combat', {
                         const enemyId = this.enemyTeam[targetSlot]
                         const enemy = this.enemyById(enemyId)
                         const hero = this.heroById(heroId)
-                        if (enemy && hero){
-                            const chance = stats.hitChance(hero, enemy)
-                            const roll = Math.random()
-                            if (roll < chance) {
-                                enemy.hp -= stats.physicalPower(hero)
-                            }
+                       if (enemy && hero) {
+                            // TODO: heroes use flat attack until enemies have primary stats (future phase)
+                            enemy.hp -= stats.physicalPower(hero)
                         }
                     }
                 }
