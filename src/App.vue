@@ -13,10 +13,10 @@ combat.initializeHeroes();
     <p>Battlefield:</p> 
       <div style="display: flex; flex-direction: row; gap: 20px;">
         <div style="display: flex; flex-direction: column; gap: 10px;">
-           <HeroSlot v-for="(slot) of combat.backRow" :hero="combat.heroById(slot.hero)" :location="'battlefield'" :slotIndex="slot.slotIndex" @click="(heroId, location, slotIndex) => combat.handleSlotClick(heroId, location, slotIndex)" />
+           <HeroSlot v-for="(slot) of combat.backRow" :hero="combat.entityById(slot.hero)" :location="'battlefield'" :slotIndex="slot.slotIndex" @click="(heroId, location, slotIndex) => combat.handleSlotClick(heroId, location, slotIndex)" />
         </div>
         <div style="display: flex; flex-direction: column; gap: 10px;">
-           <HeroSlot v-for="(slot) of combat.frontRow" :hero="combat.heroById(slot.hero)" :location="'battlefield'" :slotIndex="slot.slotIndex" @click="(heroId, location, slotIndex) => combat.handleSlotClick(heroId, location, slotIndex)" />
+           <HeroSlot v-for="(slot) of combat.frontRow" :hero="combat.entityById(slot.hero)" :location="'battlefield'" :slotIndex="slot.slotIndex" @click="(heroId, location, slotIndex) => combat.handleSlotClick(heroId, location, slotIndex)" />
         </div>
 
         <div style="min-height: 100%; align-content: center;">
@@ -24,16 +24,16 @@ combat.initializeHeroes();
         </div>
 
         <div style="display: flex; flex-direction: column; gap: 10px;">
-          <EnemySlot v-for="(slot) of combat.enemyFrontRow" :enemy="combat.enemyById(slot.enemy) " :slotIndex="slot.slotIndex" />
+          <EnemySlot v-for="(slot) of combat.enemyFrontRow" :enemy="combat.entityById(slot.enemy) " :slotIndex="slot.slotIndex" />
         </div>
         <div style="display: flex; flex-direction: column; gap: 10px;">
-          <EnemySlot v-for="(slot) of combat.enemyBackRow" :enemy="combat.enemyById(slot.enemy)"  :slotIndex="slot.slotIndex" />
+          <EnemySlot v-for="(slot) of combat.enemyBackRow" :enemy="combat.entityById(slot.enemy)"  :slotIndex="slot.slotIndex" />
         </div>
       </div>
     
     <p>Roster:</p>
     <div style="display: flex;">
-        <HeroSlot v-for="[slotIndex, hero] in combat.roster.entries()" :hero="combat.heroById(hero)" :location="'roster'" :slotIndex="slotIndex" @click="(heroId, location, slotIndex) => combat.handleSlotClick(heroId, location, slotIndex)" />
+        <HeroSlot v-for="[slotIndex, hero] in combat.roster.entries()" :hero="combat.entityById(hero)" :location="'roster'" :slotIndex="slotIndex" @click="(heroId, location, slotIndex) => combat.handleSlotClick(heroId, location, slotIndex)" />
     </div>
       
 

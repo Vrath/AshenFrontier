@@ -36,8 +36,7 @@ export const useCombatStore = defineStore('combat', {
     }),
 
     getters: {
-        heroById: (state) => (heroId: string | undefined) => state.heroes.find(h => h.id === heroId),
-        enemyById: (state) => (enemyId: string | undefined) => state.enemies.find(e => e.id === enemyId),
+        entityById: (state) => (entityId: string | undefined) => state.heroes.find(h => h.id === entityId) || state.enemies.find(e => e.id === entityId),
         frontRow: (state) => {
             const result = []
             for (let i = 0; i < 3; i++) {
@@ -96,7 +95,7 @@ export const useCombatStore = defineStore('combat', {
             this.combatRunning = true
             this.combatIntervalId = setInterval(() => {
                 this.combatTick()
-            }, 1000)
+            }, 2500)
         },
 
         generateEnemies(){
@@ -106,50 +105,14 @@ export const useCombatStore = defineStore('combat', {
         combatTick() {
             const stats = useEntityStatsStore()
             
-            for (let i = 0; i < this.battlefield.length; i++) {
-                const heroId = this.battlefield[i]
-                if (heroId) {
-                    const targetSlot = this.findMeleeTarget(i, this.enemyTeam)
-                    if (targetSlot !== null){
-                        const enemyId = this.enemyTeam[targetSlot]
-                        const enemy = this.enemyById(enemyId)
-                        const hero = this.heroById(heroId)
-                       if (enemy && hero) {
-                            const chance = stats.hitChance(enemy, hero)
-                            const roll = Math.random()
-                            if (roll < chance) {
-                                const rawDamage = stats.physicalPower(enemy)
-                                const mitigated = rawDamage * (stats.physicalPower(enemy) / (stats.physicalPower(enemy) + stats.physicalDefense(hero)))
-                                hero.hp -= mitigated
-                            }
-                        }
-                    }
-                }
-            }
-
-            for (let i = 0; i < this.enemyTeam.length; i++) {
-                const enemyId = this.enemyTeam[i]
-                if (enemyId) {
-                    const targetSlot = this.findMeleeTarget(i, this.battlefield)
-                    if (targetSlot !== null){
-                        const heroId = this.battlefield[targetSlot]
-                        const enemy = this.enemyById(enemyId)
-                        const hero = this.heroById(heroId)
-                        if (enemy && hero) {
-                            const chance = stats.hitChance(hero, enemy)  // Hero attacking enemy
-                            const rawDamage = stats.physicalPower(hero)  // Hero's damage
-                            const mitigated = rawDamage * (stats.physicalPower(hero) / (stats.physicalPower(hero) + stats.physicalDefense(enemy)))  // Enemy's defense
-                            enemy.hp -= mitigated
-                        }
-                    }
-                }
-            }
+            this.applyAttacks(this.battlefield, this.enemyTeam)
+            this.applyAttacks(this.enemyTeam, this.battlefield)
 
             //remove dead heroes
             for (let i = 0; i < this.battlefield.length; i++){
                 const heroId = this.battlefield[i]
                 if (heroId){
-                    const hero = this.heroById(heroId)
+                    const hero = this.entityById(heroId)
                     if (hero && hero.hp <= 0){
                         this.battlefield[i] = undefined
                     }
@@ -160,7 +123,7 @@ export const useCombatStore = defineStore('combat', {
             for (let i = 0; i < this.enemyTeam.length; i++){
                 const enemyId = this.enemyTeam[i]
                 if (enemyId){
-                    const enemy = this.enemyById(enemyId)
+                    const enemy = this.entityById(enemyId)
                     if (enemy && enemy.hp <= 0){
                         this.enemyTeam[i] = undefined
                     }
@@ -278,7 +241,7 @@ export const useCombatStore = defineStore('combat', {
                 enemy.hp = stats.maxHealth(enemy)
             }
         },
-        
+
         applyAttacks(attackers: (string | undefined)[], defenders: (string | undefined)[]) {
             const stats = useEntityStatsStore()
             
@@ -291,18 +254,34 @@ export const useCombatStore = defineStore('combat', {
                         const attacker = this.entityById(attackerId)
                         const defender = this.entityById(defenderId)
                         if (attacker && defender) {
+                            const acc = attacker.dex * 2 + attacker.agi * 0.5
+                            const eva = defender.agi * 2 + defender.dex * 0.5
                             const chance = stats.hitChance(attacker, defender)
                             const roll = Math.random()
+                            
+                            console.log(`${attacker.name} attacks ${defender.name}:`)
+                            console.log(`  Accuracy: ${acc.toFixed(1)} vs Evasion: ${eva.toFixed(1)}`)
+                            console.log(`  Hit chance: ${(chance * 100).toFixed(1)}%`)
+                            console.log(`  Roll: ${roll.toFixed(2)} — ${roll < chance ? 'HIT' : 'MISS'}`)
+                            
                             if (roll < chance) {
                                 const rawDamage = stats.physicalPower(attacker)
-                                const mitigated = rawDamage * (stats.physicalPower(attacker) / (stats.physicalPower(attacker) + stats.physicalDefense(defender)))
+                                const defenderDef = stats.physicalDefense(defender)
+                                const mitigated = rawDamage * (stats.physicalPower(attacker) / (stats.physicalPower(attacker) + defenderDef))
                                 defender.hp -= mitigated
+                                
+                                console.log(`  Physical Power: ${rawDamage.toFixed(1)} vs Physical Defense: ${defenderDef.toFixed(1)}`)
+                                console.log(`  Damage after mitigation: ${mitigated.toFixed(2)}`)
+                                console.log(`  ${defender.name} HP: ${defender.hp.toFixed(2)} / ${stats.maxHealth(defender)}`)
+                            } else {
+                                console.log(`  ${defender.name} takes no damage`)
                             }
                         }
                     }
                 }
             }
-        }
-    },
+        },
 
+
+    }
 })
