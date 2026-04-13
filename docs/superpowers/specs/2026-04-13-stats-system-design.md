@@ -6,7 +6,7 @@
 
 ## Overview
 
-Heroes have 6 primary stats that determine all 10 secondary stats through weighted formulas. Primary stats are set by race and class at creation, then grow per level. Secondary stats are always derived — never set directly (except through training, later).
+Heroes have 6 primary stats that determine all 10 secondary stats through weighted formulas. Primary stats are set by race and class at creation, then grow per level. Training can also directly increase primary stats. Secondary stats are always derived from primary stats, but can be further enhanced by equipment bonuses on top of the derived value.
 
 ---
 
@@ -21,7 +21,7 @@ Heroes have 6 primary stats that determine all 10 secondary stats through weight
 | INT | Intelligence | Magic offense, skill speed |
 | WIL | Willpower | Magic defense, elemental resistance |
 
-**Base value:** 10 in all stats for a generic hero. Races and classes modify starting values (typically ±1 to ±4 per stat).
+**Base value:** 10 in all stats for a generic hero. Races and classes modify starting values (typically ±1 to ±3 per stat - with later unlocks allowing up to -4, and even higher + values).
 
 ---
 
@@ -227,7 +227,8 @@ interface Hero {
 ## Balance Notes
 
 - All formulas are starting points. Numbers need playtesting.
-- Physical and Magic paths are intentionally symmetric — a physical warrior ignores INT/WIL entirely
+- Physical and Magic paths are intentionally symmetric — classes have a clear focus, but cross-investment is valid (e.g. a warrior benefits from Magic Defense and Skill Speed even if Magic Power is wasted)
 - AGI/DEX are versatile stats (touching 4 secondary stats each) — good for hybrid builds
 - INT/WIL are narrow but deep — pure magic builds feel focused
 - Health Regen is intentionally not a healer replacement — sustain exists but healers matter
+- **Evasion open question:** Evasion currently applies to both physical and magic attacks via the unified hit chance formula. This may be too strong — a high-AGI build could dodge everything. Consider splitting into Physical Evasion and Magic Evasion later, or leaving it as-is and tuning numbers. Revisit after playtesting.

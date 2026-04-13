@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useCombatStore } from './stores/combat'
 import HeroSlot from './components/HeroSlot.vue'
+import EnemySlot from './components/EnemySlot.vue';
 
 const combat = useCombatStore()
 </script>
@@ -16,11 +17,16 @@ const combat = useCombatStore()
         <div style="display: flex; flex-direction: column; gap: 10px;">
            <HeroSlot v-for="(slot) of combat.frontRow" :hero="combat.heroById(slot.hero)" :location="'battlefield'" :slotIndex="slot.slotIndex" @click="(heroId, location, slotIndex) => combat.handleSlotClick(heroId, location, slotIndex)" />
         </div>
+
         <div style="min-height: 100%; align-content: center;">
-          <button @click="combat.startCombat()">Start Combat</button>
+          <button @click="combat.startCombat()" :disabled="!combat.hasHeroOnBattlefield || combat.combatRunning">Start Combat</button>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <EnemySlot v-for="(slot) of combat.enemyFrontRow" :enemy="combat.enemyById(slot.enemy) " :slotIndex="slot.slotIndex" />
         </div>
         <div style="display: flex; flex-direction: column; gap: 10px;">
-          <p>Enemy HP: {{ combat.enemy.hp }}</p>
+          <EnemySlot v-for="(slot) of combat.enemyBackRow" :enemy="combat.enemyById(slot.enemy)"  :slotIndex="slot.slotIndex" />
         </div>
       </div>
     
