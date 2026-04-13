@@ -106,10 +106,10 @@ Update CLAUDE.md "Current phase" every time you move forward.
 **Done when:**
 
 - [X] Hero has all 6 primary stats
-- [ ] Physical Power, Max Health, Evasion calculated from primary stats
-- [ ] Hit chance uses the ratio formula (not just 100% hit)
-- [ ] Damage uses Physical Power, not raw attack number
-- [ ] All formulas live in the store or a helpers file, not in templates
+- [X] Physical Power, Max Health, Evasion calculated from primary stats
+- [X] Hit chance uses the ratio formula (not just 100% hit)
+- [X] Damage uses Physical Power, not raw attack number
+- [X] All formulas live in the store or a helpers file, not in templates
 
 ---
 

@@ -4,6 +4,7 @@ import HeroSlot from './components/HeroSlot.vue'
 import EnemySlot from './components/EnemySlot.vue';
 
 const combat = useCombatStore()
+combat.initializeHeroes();
 </script>
 
 <template>

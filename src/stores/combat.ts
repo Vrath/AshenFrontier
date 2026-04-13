@@ -272,7 +272,13 @@ export const useCombatStore = defineStore('combat', {
             }
 
             return null; //no targets
-        }
+        },
+        initializeHeroes() {
+            const stats = useHeroStatsStore()
+            for (const hero of this.heroes) {
+                hero.hp = stats.maxHealth(hero)
+            }
+        },
     },
 
 })

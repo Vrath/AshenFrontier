@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import type { Hero } from '../stores/combat';
 import { useCombatStore } from '../stores/combat';
+import { useHeroStatsStore } from '../stores/heroStats';
 
 const combat = useCombatStore();
+const stats = useHeroStatsStore();
 
 const { hero, location, slotIndex } = defineProps<{
   hero: Hero | undefined
@@ -39,7 +41,7 @@ const handleDrop = (e: DragEvent) => {
   <div class="hero-slot" @click="handleClick" @drop="handleDrop" @dragover.prevent>
     <div v-if="hero" draggable="true" @dragstart="handleDragStart">
         <p>{{ hero.name }}</p>
-        <p>{{ hero.hp }} / {{ hero.maxHp }}</p>
+        {{ hero.hp }} / {{ stats.maxHealth(hero) }}
     </div>
     <div v-else>
       <p>Empty slot</p>
