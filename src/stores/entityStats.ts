@@ -1,24 +1,27 @@
 import { defineStore } from "pinia";
-import type { Hero } from "./combat";
+import type { Entity } from "./combat";
 
-export const useHeroStatsStore = defineStore('stats', {
+export const useEntityStatsStore = defineStore('stats', {
     state: () => ({
     }),
 
     getters: {
-        maxHealth: () => (hero: Hero): number =>
+        maxHealth: () => (hero: Entity): number =>
             hero.vit * 4 + hero.str * 1,
 
-        physicalPower: () => (hero: Hero): number =>
+        physicalPower: () => (hero: Entity): number =>
             hero.str * 2 + hero.dex * 0.5,
 
-        evasion: () => (hero: Hero): number =>
+        physicalDefense: () => (hero: Entity): number =>
+            hero.vit * 1 + hero.str * 0.5,
+
+        evasion: () => (hero: Entity): number =>
             hero.agi * 2 + hero.dex * 0.5,
 
-        accuracy: () => (hero: Hero): number =>
+        accuracy: () => (hero: Entity): number =>
             hero.dex * 2 + hero.agi * 0.5,
 
-        hitChance: () => (attacker: Hero, defender: Hero): number => {
+        hitChance: () => (attacker: Entity, defender: Entity): number => {
             // Note: we inline the accuracy/evasion formulas here rather than
             // calling this.accuracy(attacker) — calling other getters from
             // inside a returned function requires extra care in Pinia's options

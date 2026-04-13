@@ -107,7 +107,7 @@ Update CLAUDE.md "Current phase" every time you move forward.
 
 - [X] Hero has all 6 primary stats
 - [X] Physical Power, Max Health, Evasion calculated from primary stats
-- [X] Hit chance uses the ratio formula (not just 100% hit)
+- [ ] Hit chance uses the ratio formula (not just 100% hit)
 - [X] Damage uses Physical Power, not raw attack number
 - [X] All formulas live in the store or a helpers file, not in templates
 
@@ -125,11 +125,10 @@ Update CLAUDE.md "Current phase" every time you move forward.
 
 **Done when:**
 
-- [ ] Gold increases over time
+- [ ] Tavern generates passive income thats capped (eg. 100, 1 hour)
 - [ ] Tavern shows 3 randomly generated heroes
 - [ ] Recruiting a hero costs gold and adds them to your roster
-- [ ] Roster has a capacity limit
-- [ ] Heroes in roster have upkeep cost per tick
+- [ ] Each hero has a cost per battle, which increases with level
 
 ---
 
@@ -209,6 +208,7 @@ Update CLAUDE.md "Current phase" every time you move forward.
 - [ ] Encounter generator produces varied enemy teams per battle
 - [ ] Winning drops materials into inventory
 - [ ] Mastery counter increments per location
+- [ ] Quests/Contracts: Tavern offers simple objectives that reward materials, gold, or unlocks when completed
 
 ---
 
@@ -226,6 +226,7 @@ It is copy, paste, rename, adjust numbers, playtest, repeat.
 - [ ] 10+ monsters across first 3 regions
 - [ ] 20+ items across rarity tiers
 - [ ] Game is playable start to finish in a basic form
+
 
 ---
 

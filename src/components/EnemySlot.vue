@@ -1,11 +1,13 @@
 <script setup lang="ts">
-import type { Enemy } from '../stores/combat';
+import type { Entity } from '../stores/combat';
 import { useCombatStore } from '../stores/combat';
+import { useEntityStatsStore } from '../stores/entityStats';
 
 const combat = useCombatStore();
+const stats = useEntityStatsStore();
 
 const { enemy, slotIndex } = defineProps<{
-  enemy: Enemy | undefined
+  enemy: Entity | undefined
   slotIndex: number
 }>()
 </script>
@@ -16,7 +18,7 @@ const { enemy, slotIndex } = defineProps<{
   <div class="enemy-slot">
     <div v-if="enemy">
         <p>{{ enemy.name }}</p>
-        <p>{{ enemy.hp }} / {{ enemy.maxHp }}</p>
+        <p>{{ Math.round(enemy.hp) }} / {{ stats.maxHealth(enemy) }}</p>
     </div>
     <div v-else>
       <p>Empty slot</p>

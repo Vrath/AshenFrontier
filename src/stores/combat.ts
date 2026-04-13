@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
-import { useHeroStatsStore } from './heroStats'
+import { useEntityStatsStore } from './entityStats';
 
-export interface Hero {
+export interface Entity {
     id: string
     name: string
     str: number
@@ -13,14 +13,6 @@ export interface Hero {
     hp: number
 }
 
-export interface Enemy {
-    id: string
-    name: string
-    hp: number
-    maxHp: number
-    attack: number
-}
-
 export const useCombatStore = defineStore('combat', {
     state: () => ({
         heroes: [
@@ -29,9 +21,9 @@ export const useCombatStore = defineStore('combat', {
             { id: 'h3', name: 'Dwarf Shaman',  hp: 0, str: 8,  vit: 10, agi: 6,  dex: 8,  int: 12, wil: 11 },
         ],
         enemies: [
-            { id: 'e1', name: 'Ashboar', hp: 50, maxHp: 50, attack: 8},
-            { id: 'e2', name: 'Gnoll Assassin', hp: 40, maxHp: 40, attack: 13},
-            { id: 'e3', name: 'Zombie Mage', hp: 30, maxHp: 30, attack: 18},
+            { id: 'e1', name: 'Ashboar', hp: 0, str: 8, vit: 10, agi: 5, dex: 5, int: 5, wil: 5},
+            { id: 'e2', name: 'Gnoll Assassin', hp: 0, str: 9, vit: 5, agi: 9, dex: 9, int: 5, wil: 5},
+            { id: 'e3', name: 'Zombie Mage', hp: 0, str: 5, vit: 5, agi: 5, dex: 5, int: 9, wil: 7},
         ],
         combatRunning: false,            
         combatIntervalId: undefined as number | undefined,
@@ -93,7 +85,7 @@ export const useCombatStore = defineStore('combat', {
     actions: {
         startCombat() {
             if (this.combatRunning) return
-            const stats = useHeroStatsStore()
+            const stats = useEntityStatsStore()
 
             // Set each hero's hp to their calculated max health
             for (const hero of this.heroes) {
@@ -112,7 +104,7 @@ export const useCombatStore = defineStore('combat', {
         },
 
         combatTick() {
-            const stats = useHeroStatsStore()
+            const stats = useEntityStatsStore()
             
             for (let i = 0; i < this.battlefield.length; i++) {
                 const heroId = this.battlefield[i]
@@ -123,8 +115,13 @@ export const useCombatStore = defineStore('combat', {
                         const enemy = this.enemyById(enemyId)
                         const hero = this.heroById(heroId)
                        if (enemy && hero) {
-                            // TODO: heroes use flat attack until enemies have primary stats (future phase)
-                            enemy.hp -= stats.physicalPower(hero)
+                            const chance = stats.hitChance(enemy, hero)
+                            const roll = Math.random()
+                            if (roll < chance) {
+                                const rawDamage = stats.physicalPower(enemy)
+                                const mitigated = rawDamage * (stats.physicalPower(enemy) / (stats.physicalPower(enemy) + stats.physicalDefense(hero)))
+                                hero.hp -= mitigated
+                            }
                         }
                     }
                 }
@@ -139,8 +136,10 @@ export const useCombatStore = defineStore('combat', {
                         const enemy = this.enemyById(enemyId)
                         const hero = this.heroById(heroId)
                         if (enemy && hero) {
-                            // TODO: enemies use flat attack until they get primary stats (future phase)
-                            hero.hp -= enemy.attack
+                            const chance = stats.hitChance(hero, enemy)  // Hero attacking enemy
+                            const rawDamage = stats.physicalPower(hero)  // Hero's damage
+                            const mitigated = rawDamage * (stats.physicalPower(hero) / (stats.physicalPower(hero) + stats.physicalDefense(enemy)))  // Enemy's defense
+                            enemy.hp -= mitigated
                         }
                     }
                 }
@@ -271,11 +270,39 @@ export const useCombatStore = defineStore('combat', {
             return null; //no targets
         },
         initializeHeroes() {
-            const stats = useHeroStatsStore()
+            const stats = useEntityStatsStore()
             for (const hero of this.heroes) {
                 hero.hp = stats.maxHealth(hero)
             }
+            for (const enemy of this.enemies){
+                enemy.hp = stats.maxHealth(enemy)
+            }
         },
+        
+        applyAttacks(attackers: (string | undefined)[], defenders: (string | undefined)[]) {
+            const stats = useEntityStatsStore()
+            
+            for (let i = 0; i < attackers.length; i++) {
+                const attackerId = attackers[i]
+                if (attackerId) {
+                    const targetSlot = this.findMeleeTarget(i, defenders)
+                    if (targetSlot !== null) {
+                        const defenderId = defenders[targetSlot]
+                        const attacker = this.entityById(attackerId)
+                        const defender = this.entityById(defenderId)
+                        if (attacker && defender) {
+                            const chance = stats.hitChance(attacker, defender)
+                            const roll = Math.random()
+                            if (roll < chance) {
+                                const rawDamage = stats.physicalPower(attacker)
+                                const mitigated = rawDamage * (stats.physicalPower(attacker) / (stats.physicalPower(attacker) + stats.physicalDefense(defender)))
+                                defender.hp -= mitigated
+                            }
+                        }
+                    }
+                }
+            }
+        }
     },
 
 })
