@@ -4,6 +4,10 @@ import { useEntityStatsStore } from './entityStats';
 export interface Entity {
     id: string
     name: string
+    displayName?: string
+    hireCost?: number
+    battleUpkeepCost?: number
+    rosterUpkeepCost?: number
     str: number
     vit: number
     agi: number
@@ -11,6 +15,8 @@ export interface Entity {
     int: number
     wil: number
     hp: number
+    race?: string | null
+    class?: string | null
 }
 
 export const useCombatStore = defineStore('combat', {
@@ -103,7 +109,6 @@ export const useCombatStore = defineStore('combat', {
         },
 
         combatTick() {
-            const stats = useEntityStatsStore()
             
             this.applyAttacks(this.battlefield, this.enemyTeam)
             this.applyAttacks(this.enemyTeam, this.battlefield)
@@ -204,28 +209,34 @@ export const useCombatStore = defineStore('combat', {
 
         // helper methods
         findMeleeTarget(heroSlot: number, targetArray: (string | undefined)[]): number | null {
-            const heroColumn = heroSlot % 3  // 0→0, 1→1, 2→2, 3→0, 4→1, 5→2
-            
-            // Priority order for front row
-            const frontRowPriority = [heroColumn, heroColumn - 1, heroColumn + 1, 3 - heroColumn]
-                .filter(col => col >= 0 && col < 3)
-            
-            // Check front row in priority order
-            for (let col of frontRowPriority) {
-                if (targetArray[col] !== undefined) {
-                    return col
+            const frontRowSlots = [0, 1, 2];
+            const sortedFront =  frontRowSlots.sort((a, b) => {
+                const distA = Math.abs(heroSlot - a)  // distance from hero to slot a
+                const distB = Math.abs(heroSlot - b)  // distance from hero to slot b
+                if (distA !== distB) return distA - distB  // return closer one first
+                return a - b  // if same distance, return left one first
+            })
+            for (let slot of sortedFront) {
+                if (targetArray[slot] !== undefined) {
+                    return slot  // Found a target!
                 }
             }
-            
-            // If no front-row targets, check back row with same priority
-            const backRowPriority = frontRowPriority.map(col => col + 3)
-            for (let slot of backRowPriority) {
+            //now same for back row
+            const backRowSlots = [3, 4, 5];
+            const sortedBack = backRowSlots.sort((a, b) => {
+                const distA = Math.abs(heroSlot - a)
+                const distB = Math.abs(heroSlot - b)
+                if (distA !== distB) return distA - distB
+                return a - b
+            })
+
+            for (let slot of sortedBack) {
                 if (targetArray[slot] !== undefined) {
                     return slot
                 }
             }
-            
-            return null
+
+            return null; //no targets
         },
         initializeHeroes() {
             const stats = useEntityStatsStore()

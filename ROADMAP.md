@@ -107,7 +107,7 @@ Update CLAUDE.md "Current phase" every time you move forward.
 
 - [X] Hero has all 6 primary stats
 - [X] Physical Power, Max Health, Evasion calculated from primary stats
-- [ ] Hit chance uses the ratio formula (not just 100% hit)
+- [X] Hit chance uses the ratio formula (not just 100% hit)
 - [X] Damage uses Physical Power, not raw attack number
 - [X] All formulas live in the store or a helpers file, not in templates
 
@@ -152,7 +152,7 @@ Update CLAUDE.md "Current phase" every time you move forward.
 
 ---
 
-## Phase 8 — Skills
+## Phase 8 — Leveling & Active Skills
 
 **Goal:** Heroes have active skills with their own cooldown bars.
 
@@ -164,6 +164,7 @@ Update CLAUDE.md "Current phase" every time you move forward.
 
 **Done when:**
 
+- [ ] Heroes level up with experience and gain skill points
 - [ ] Skill object type defined (name, cooldown, effect)
 - [ ] Each hero has 2 active skill slots
 - [ ] Skills fire automatically when cooldown expires
@@ -221,8 +222,8 @@ It is copy, paste, rename, adjust numbers, playtest, repeat.
 
 **Done when:**
 
-- [ ] 3 starter races with real passives
-- [ ] 3 starter classes with real skill trees (simplified)
+- [ ] 5 races with real passives
+- [ ] 5 classes with real skill trees (simplified)
 - [ ] 10+ monsters across first 3 regions
 - [ ] 20+ items across rarity tiers
 - [ ] Game is playable start to finish in a basic form
@@ -243,6 +244,7 @@ It is copy, paste, rename, adjust numbers, playtest, repeat.
 - [ ] Performance check — no memory leaks from intervals
 - [ ] Pixel art UI - buttons, backgrounds, etc.
 - [ ] Tauri packaging and desktop build
+- [ ] Procedural name generation + reroll (eg. Mira the Thornmage)
 
 ---
 
@@ -254,7 +256,7 @@ These are real ideas, not forgotten — just not yet:
 - Enchanting and rune sockets
 - Region 4–10 content
 - Legendary items
-- Unlockable races beyond the starter three
+- 10 races, 10 classes
 - Infinite dungeons, where you send a team in and they fight through endless procedurally generated floors until they die, with a high score leaderboard
 
 ---
