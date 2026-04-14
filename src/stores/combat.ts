@@ -209,10 +209,12 @@ export const useCombatStore = defineStore('combat', {
 
         // helper methods
         findMeleeTarget(heroSlot: number, targetArray: (string | undefined)[]): number | null {
+            const heroColumn = heroSlot % 3  // normalize to column (0, 1, or 2)
+
             const frontRowSlots = [0, 1, 2];
-            const sortedFront =  frontRowSlots.sort((a, b) => {
-                const distA = Math.abs(heroSlot - a)  // distance from hero to slot a
-                const distB = Math.abs(heroSlot - b)  // distance from hero to slot b
+            const sortedFront = frontRowSlots.sort((a, b) => {
+                const distA = Math.abs(heroColumn - a)  // distance from hero's column to slot a
+                const distB = Math.abs(heroColumn - b)  // distance from hero's column to slot b
                 if (distA !== distB) return distA - distB  // return closer one first
                 return a - b  // if same distance, return left one first
             })
@@ -224,8 +226,8 @@ export const useCombatStore = defineStore('combat', {
             //now same for back row
             const backRowSlots = [3, 4, 5];
             const sortedBack = backRowSlots.sort((a, b) => {
-                const distA = Math.abs(heroSlot - a)
-                const distB = Math.abs(heroSlot - b)
+                const distA = Math.abs(heroColumn - (a % 3))  // distance from hero's column to slot a's column
+                const distB = Math.abs(heroColumn - (b % 3))  // distance from hero's column to slot b's column
                 if (distA !== distB) return distA - distB
                 return a - b
             })
