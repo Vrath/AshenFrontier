@@ -40,7 +40,7 @@ const handleDrop = (e: DragEvent) => {
 
   <div class="hero-slot" @click="handleClick" @drop="handleDrop" @dragover.prevent>
     <div v-if="hero" draggable="true" @dragstart="handleDragStart">
-        <p>{{ hero.name }}</p>
+        <h4>{{ hero.displayName }}</h4>
         {{ Math.round(hero.hp) }} / {{ stats.maxHealth(hero) }}
     </div>
     <div v-else>

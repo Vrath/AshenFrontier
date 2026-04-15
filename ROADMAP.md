@@ -125,10 +125,10 @@ Update CLAUDE.md "Current phase" every time you move forward.
 
 **Done when:**
 
-- [ ] Tavern generates passive income thats capped (eg. 100, 1 hour)
-- [ ] Tavern shows 3 randomly generated heroes
-- [ ] Recruiting a hero costs gold and adds them to your roster
-- [ ] Each hero has a cost per battle, which increases with level
+- [X] Tavern generates passive income thats capped (eg. 100, 1 hour)
+- [X] Tavern shows 3 randomly generated heroes
+- [X] Recruiting a hero costs gold and adds them to your roster
+- [X] Each hero has a cost per battle, which increases with level
 
 ---
 

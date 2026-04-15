@@ -17,7 +17,7 @@ const { enemy, slotIndex } = defineProps<{
 
   <div class="enemy-slot">
     <div v-if="enemy">
-        <p>{{ enemy.name }}</p>
+        <h4>{{ enemy.name }}</h4>
         <p>{{ Math.round(enemy.hp) }} / {{ stats.maxHealth(enemy) }}</p>
     </div>
     <div v-else>

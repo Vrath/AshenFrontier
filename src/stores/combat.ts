@@ -1,13 +1,13 @@
 import { defineStore } from 'pinia';
 import { useEntityStatsStore } from './entityStats';
+import { useHeroesStore } from './heroes';
+import { useVillageStore } from './village';
 
 export interface Entity {
     id: string
     name: string
     displayName?: string
-    hireCost?: number
-    battleUpkeepCost?: number
-    rosterUpkeepCost?: number
+    level?: number
     str: number
     vit: number
     agi: number
@@ -21,11 +21,6 @@ export interface Entity {
 
 export const useCombatStore = defineStore('combat', {
     state: () => ({
-        heroes: [
-            { id: 'h1', name: 'Orc Paladin',   hp: 0, str: 12, vit: 13, agi: 7,  dex: 7,  int: 6,  wil: 10 },
-            { id: 'h2', name: 'Elf Berserker', hp: 0, str: 14, vit: 8,  agi: 12, dex: 10, int: 6,  wil: 5  },
-            { id: 'h3', name: 'Dwarf Shaman',  hp: 0, str: 8,  vit: 10, agi: 6,  dex: 8,  int: 12, wil: 11 },
-        ],
         enemies: [
             { id: 'e1', name: 'Ashboar', hp: 0, str: 8, vit: 10, agi: 5, dex: 5, int: 5, wil: 5},
             { id: 'e2', name: 'Gnoll Assassin', hp: 0, str: 9, vit: 5, agi: 9, dex: 9, int: 5, wil: 5},
@@ -42,7 +37,10 @@ export const useCombatStore = defineStore('combat', {
     }),
 
     getters: {
-        entityById: (state) => (entityId: string | undefined) => state.heroes.find(h => h.id === entityId) || state.enemies.find(e => e.id === entityId),
+        entityById: (state) => (entityId: string | undefined) => {
+            const heroes = useHeroesStore()
+            return heroes.roster.find(h => h.id === entityId) || state.enemies.find(e => e.id === entityId)
+        },
         frontRow: (state) => {
             const result = []
             for (let i = 0; i < 3; i++) {
@@ -89,11 +87,18 @@ export const useCombatStore = defineStore('combat', {
 
     actions: {
         startCombat() {
-            if (this.combatRunning) return
+            const heroes = useHeroesStore()
+            const village = useVillageStore()
             const stats = useEntityStatsStore()
 
-            // Set each hero's hp to their calculated max health
-            for (const hero of this.heroes) {
+            if (this.combatRunning) return
+            
+            const totalCost = heroes.totalBattleUpkeep + heroes.totalRosterUpkeep
+            if (totalCost > village.gold) return
+            village.gold -= totalCost
+
+
+            for (const hero of heroes.roster) {
                 hero.hp = stats.maxHealth(hero)
             }
 
@@ -101,7 +106,7 @@ export const useCombatStore = defineStore('combat', {
             this.combatRunning = true
             this.combatIntervalId = setInterval(() => {
                 this.combatTick()
-            }, 2500)
+            }, 1000)
         },
 
         generateEnemies(){
@@ -109,7 +114,8 @@ export const useCombatStore = defineStore('combat', {
         },
 
         combatTick() {
-            
+            const heroesStore = useHeroesStore()
+
             this.applyAttacks(this.battlefield, this.enemyTeam)
             this.applyAttacks(this.enemyTeam, this.battlefield)
 
@@ -120,6 +126,7 @@ export const useCombatStore = defineStore('combat', {
                     const hero = this.entityById(heroId)
                     if (hero && hero.hp <= 0){
                         this.battlefield[i] = undefined
+                        heroesStore.removeHero(heroId)
                     }
                 }
             }
@@ -240,15 +247,7 @@ export const useCombatStore = defineStore('combat', {
 
             return null; //no targets
         },
-        initializeHeroes() {
-            const stats = useEntityStatsStore()
-            for (const hero of this.heroes) {
-                hero.hp = stats.maxHealth(hero)
-            }
-            for (const enemy of this.enemies){
-                enemy.hp = stats.maxHealth(enemy)
-            }
-        },
+
 
         applyAttacks(attackers: (string | undefined)[], defenders: (string | undefined)[]) {
             const stats = useEntityStatsStore()
