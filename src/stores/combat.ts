@@ -3,28 +3,14 @@ import { useEntityStatsStore } from './entityStats';
 import { useHeroesStore } from './heroes';
 import { useVillageStore } from './village';
 
-export interface Entity {
-    id: string
-    name: string
-    displayName?: string
-    level?: number
-    str: number
-    vit: number
-    agi: number
-    dex: number
-    int: number
-    wil: number
-    hp: number
-    race?: string | null
-    class?: string | null
-}
+import type { Entity } from '../types'
 
 export const useCombatStore = defineStore('combat', {
     state: () => ({
         enemies: [
-            { id: 'e1', name: 'Ashboar', hp: 0, str: 8, vit: 10, agi: 5, dex: 5, int: 5, wil: 5},
-            { id: 'e2', name: 'Gnoll Assassin', hp: 0, str: 9, vit: 5, agi: 9, dex: 9, int: 5, wil: 5},
-            { id: 'e3', name: 'Zombie Mage', hp: 0, str: 5, vit: 5, agi: 5, dex: 5, int: 9, wil: 7},
+            { id: 'e1', name: 'Ashboar', hp: 0, str: 8, vit: 10, agi: 5, dex: 5, int: 5, wil: 5, equipment: {}},
+            { id: 'e2', name: 'Gnoll Assassin', hp: 0, str: 9, vit: 5, agi: 9, dex: 9, int: 5, wil: 5, equipment: {}},
+            { id: 'e3', name: 'Zombie Mage', hp: 0, str: 5, vit: 5, agi: 5, dex: 5, int: 9, wil: 7, equipment: {}},
         ],
         combatRunning: false,            
         combatIntervalId: undefined as number | undefined,
@@ -39,7 +25,7 @@ export const useCombatStore = defineStore('combat', {
     getters: {
         entityById: (state) => (entityId: string | undefined) => {
             const heroes = useHeroesStore()
-            return heroes.roster.find(h => h.id === entityId) || state.enemies.find(e => e.id === entityId)
+            return heroes.roster.find((h: Entity) => h.id === entityId) || state.enemies.find((e: Entity) => e.id === entityId)
         },
         frontRow: (state) => {
             const result = []
