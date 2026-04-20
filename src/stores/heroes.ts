@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import type { Entity } from "./combat";
+import type { Entity } from "../types";
 import { races } from "../data/races";
 import { classes } from "../data/classes";
 
@@ -29,7 +29,7 @@ export const useHeroesStore = defineStore('heroes', {
         totalBattleUpkeep: (state) => {
             const combat = useCombatStore()
             let upkeep = 0
-            
+
             // Sum upkeep for heroes on battlefield
             for (const heroId of combat.battlefield) {
                 if (heroId) {
@@ -44,7 +44,7 @@ export const useHeroesStore = defineStore('heroes', {
         totalRosterUpkeep: (state) => {
             const combat = useCombatStore()
             let upkeep = 0
-            
+
             // Sum upkeep for heroes in roster but NOT on battlefield
             for (const hero of state.roster) {
                 if (!combat.battlefield.includes(hero.id)) {
@@ -56,7 +56,7 @@ export const useHeroesStore = defineStore('heroes', {
     },
 
     actions: {
-        generateHero(): Entity{
+        generateHero(): Entity {
             let race: string = '';
             let classType: string = '';
             let isUnique = false;
@@ -69,17 +69,18 @@ export const useHeroesStore = defineStore('heroes', {
                 const exists = this.tavernHeroes.some(h => h.race === race || h.class === classType);
                 isUnique = !exists;
             }
-            
+
             // Now race and classType are unique. Create the hero.
             const raceModifiers = races[race as keyof typeof races];
             const classModifiers = classes[classType as keyof typeof classes];
-            
+
             const hero: Entity = {
                 id: `h_${this.nextHeroId++}`,
                 name: `${race} ${classType}`,
                 displayName: `${race.charAt(0).toUpperCase() + race.slice(1)} ${classType.charAt(0).toUpperCase() + classType.slice(1)}`,
                 race: race as string,
                 class: classType as string,
+                equipment: {},
                 level: 1,
                 str: 10 + raceModifiers.str + classModifiers.str,
                 vit: 10 + raceModifiers.vit + classModifiers.vit,
@@ -104,9 +105,9 @@ export const useHeroesStore = defineStore('heroes', {
             if (villageStore.spendGold(this.hireCost)) {
                 this.roster.push(hero);
                 this.tavernHeroes = this.tavernHeroes.filter(h => h.id !== hero.id);
-            } 
+            }
         },
-        removeHero(heroId: string){
+        removeHero(heroId: string) {
             this.roster = this.roster.filter(h => h.id !== heroId)
         },
         startTimerTick() {
