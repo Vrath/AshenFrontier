@@ -22,11 +22,6 @@ export const useEntityStatsStore = defineStore('stats', {
             hero.dex * 2 + hero.agi * 0.5,
 
         hitChance: () => (attacker: Entity, defender: Entity): number => {
-            // Note: we inline the accuracy/evasion formulas here rather than
-            // calling this.accuracy(attacker) — calling other getters from
-            // inside a returned function requires extra care in Pinia's options
-            // API. Keeping it simple for now. If you change the accuracy or
-            // evasion formulas later, remember to update this too.
             const acc = attacker.dex * 2 + attacker.agi * 0.5
             const eva = defender.agi * 2 + defender.dex * 0.5
             return 0.5 + (acc / (acc + eva)) * 0.49
