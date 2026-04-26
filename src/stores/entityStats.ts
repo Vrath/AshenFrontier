@@ -73,7 +73,10 @@ export const useEntityStatsStore = defineStore('stats', {
 
 
         hitChance: () => (attacker: Entity, defender: Entity): number => {
+<<<<<<< HEAD
             // NOTE: due to pinia's API, we cannot reference getters within getters - it requires extra care. Need to to change this everytime the stat formulas are changed, or find a workaround.
+=======
+>>>>>>> refs/remotes/origin/main
             const acc = attacker.dex * 2 + attacker.agi * 0.5
             const eva = defender.agi * 2 + defender.dex * 0.5
             return 0.5 + (acc / (acc + eva)) * 0.49

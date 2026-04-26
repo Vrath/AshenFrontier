@@ -23,8 +23,9 @@ dist-ssr
 *.sln
 *.sw?
 
-CLAUDE.md
-.gitignore
 ashen_frontier_gdd.docx
 docs
+<<<<<<< HEAD
 ROADMAP.md
+=======
+>>>>>>> refs/remotes/origin/main
