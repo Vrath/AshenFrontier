@@ -1,14 +1,15 @@
-export type SlotType =  'weapon' | 'head' | 'armor' | 'boots' | 'gloves' | 'amulet'
+export type SlotType = 'weapon' | 'head' | 'armor' | 'boots' | 'gloves' | 'amulet'
 export type TargetingType = 'melee' | 'ranged'
+export type PrimaryStatKey = 'str' | 'vit' | 'agi' | 'dex' | 'int' | 'wil'
 export type SecondaryStatKey = 'physicalPower' | 'maxHealth' | 'healthRegen' | 'evasion' | 'accuracy' | 'attackSpeed' | 'magicPower' | 'skillSpeed' | 'physicalDefense' | 'magicDefense'
 
 export interface EquipmentSlots {
-  weapon?: Item,
-  head?: Item,
-  armor?: Item,
-  boots?: Item,
-  gloves?: Item,
-  amulet?: Item
+    weapon?: Item,
+    head?: Item,
+    armor?: Item,
+    boots?: Item,
+    gloves?: Item,
+    amulet?: Item
 }
 export interface DamageWeights {
     piercing?: number,
