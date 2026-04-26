@@ -8,11 +8,11 @@ import type { Entity } from '../types'
 export const useCombatStore = defineStore('combat', {
     state: () => ({
         enemies: [
-            { id: 'e1', name: 'Ashboar', hp: 0, str: 8, vit: 10, agi: 5, dex: 5, int: 5, wil: 5, equipment: {}},
-            { id: 'e2', name: 'Gnoll Assassin', hp: 0, str: 9, vit: 5, agi: 9, dex: 9, int: 5, wil: 5, equipment: {}},
-            { id: 'e3', name: 'Zombie Mage', hp: 0, str: 5, vit: 5, agi: 5, dex: 5, int: 9, wil: 7, equipment: {}},
+            { id: 'e1', name: 'Ashboar', hp: 0, str: 8, vit: 10, agi: 5, dex: 5, int: 5, wil: 5, equipment: {} },
+            { id: 'e2', name: 'Gnoll Assassin', hp: 0, str: 9, vit: 5, agi: 9, dex: 9, int: 5, wil: 5, equipment: {} },
+            { id: 'e3', name: 'Zombie Mage', hp: 0, str: 5, vit: 5, agi: 5, dex: 5, int: 9, wil: 7, equipment: {} },
         ],
-        combatRunning: false,            
+        combatRunning: false,
         combatIntervalId: undefined as number | undefined,
         roster: ['h1', 'h2', 'h3', undefined] as (string | undefined)[],
         battlefield: [undefined, undefined, undefined, undefined, undefined, undefined] as (string | undefined)[],
@@ -31,8 +31,8 @@ export const useCombatStore = defineStore('combat', {
             const result = []
             for (let i = 0; i < 3; i++) {
                 result.push({
-                hero: state.battlefield[i],
-                slotIndex: i
+                    hero: state.battlefield[i],
+                    slotIndex: i
                 })
             }
             return result;
@@ -41,8 +41,8 @@ export const useCombatStore = defineStore('combat', {
             const result = []
             for (let i = 3; i < 6; i++) {
                 result.push({
-                hero: state.battlefield[i],
-                slotIndex: i
+                    hero: state.battlefield[i],
+                    slotIndex: i
                 })
             }
             return result;
@@ -51,8 +51,8 @@ export const useCombatStore = defineStore('combat', {
             const result = []
             for (let i = 0; i < 3; i++) {
                 result.push({
-                enemy: state.enemyTeam[i],
-                slotIndex: i
+                    enemy: state.enemyTeam[i],
+                    slotIndex: i
                 })
             }
             return result;
@@ -61,8 +61,8 @@ export const useCombatStore = defineStore('combat', {
             const result = []
             for (let i = 3; i < 6; i++) {
                 result.push({
-                enemy: state.enemyTeam[i],
-                slotIndex: i
+                    enemy: state.enemyTeam[i],
+                    slotIndex: i
                 })
             }
             return result;
@@ -78,7 +78,7 @@ export const useCombatStore = defineStore('combat', {
             const stats = useEntityStatsStore()
 
             if (this.combatRunning) return
-            
+
             const totalCost = heroes.totalBattleUpkeep + heroes.totalRosterUpkeep
             if (totalCost > village.gold) return
             village.gold -= totalCost
@@ -95,7 +95,7 @@ export const useCombatStore = defineStore('combat', {
             }, 1000)
         },
 
-        generateEnemies(){
+        generateEnemies() {
             this.enemyTeam = ['e1', undefined, 'e2', undefined, 'e3', undefined];
         },
 
@@ -106,11 +106,11 @@ export const useCombatStore = defineStore('combat', {
             this.applyAttacks(this.enemyTeam, this.battlefield)
 
             //remove dead heroes
-            for (let i = 0; i < this.battlefield.length; i++){
+            for (let i = 0; i < this.battlefield.length; i++) {
                 const heroId = this.battlefield[i]
-                if (heroId){
+                if (heroId) {
                     const hero = this.entityById(heroId)
-                    if (hero && hero.hp <= 0){
+                    if (hero && hero.hp <= 0) {
                         this.battlefield[i] = undefined
                         heroesStore.removeHero(heroId)
                     }
@@ -118,23 +118,23 @@ export const useCombatStore = defineStore('combat', {
             }
 
             //remove dead enemies
-            for (let i = 0; i < this.enemyTeam.length; i++){
+            for (let i = 0; i < this.enemyTeam.length; i++) {
                 const enemyId = this.enemyTeam[i]
-                if (enemyId){
+                if (enemyId) {
                     const enemy = this.entityById(enemyId)
-                    if (enemy && enemy.hp <= 0){
+                    if (enemy && enemy.hp <= 0) {
                         this.enemyTeam[i] = undefined
                     }
                 }
             }
 
             //if either team is dead, stop combat
-            if (!this.hasHeroOnBattlefield || !this.hasEnemyOnBattlefield){
+            if (!this.hasHeroOnBattlefield || !this.hasEnemyOnBattlefield) {
                 clearInterval(this.combatIntervalId)
                 this.combatRunning = false
-                if (!this.hasHeroOnBattlefield && !this.hasEnemyOnBattlefield){
+                if (!this.hasHeroOnBattlefield && !this.hasEnemyOnBattlefield) {
                     console.log("Draw!")
-                }else if (this.hasHeroOnBattlefield){
+                } else if (this.hasHeroOnBattlefield) {
                     console.log("You won!")
                 } else {
                     console.log("You lost!")
@@ -142,8 +142,8 @@ export const useCombatStore = defineStore('combat', {
             }
         },
 
-       handleSlotClick(heroIdOrNull: string | undefined, location: string, slotIndex?: number){
-        console.log(slotIndex)
+        handleSlotClick(heroIdOrNull: string | undefined, location: string, slotIndex?: number) {
+            console.log(slotIndex)
             //check if a hero is selected
             if (this.selectedHero) {
                 // A hero is selected
@@ -157,7 +157,7 @@ export const useCombatStore = defineStore('combat', {
                     }
                 }
                 this.clearSelection()
-                } else {
+            } else {
                 // No hero selected yet
                 this.selectedHero = heroIdOrNull
                 this.selectedHeroSource = location
@@ -167,35 +167,35 @@ export const useCombatStore = defineStore('combat', {
                 this.roster.push(undefined);
             }
         },
-       moveHero(sourceHeroId: string, sourceLocation: string, sourceSlot: number, targetLocation: string, targetSlot: number) {
-                //clear the source location
-                if (sourceLocation === 'battlefield') {
-                    this.battlefield[sourceSlot] = undefined
-                } else {
-                    this.roster[sourceSlot] = undefined
-                }
-                //put the hero in target location
-                if (targetLocation === 'battlefield') {
-                    this.battlefield[targetSlot] = sourceHeroId
-                } else {
-                    this.roster[targetSlot] = sourceHeroId
-                }
-            },
-        swapHeroes(sourceHeroId: string, sourceLocation: string, sourceSlot: number, targetHeroId: string, targetLocation: string, targetSlot: number){
-                //put target hero in source location
-                if (sourceLocation === 'battlefield') {
-                    this.battlefield[sourceSlot] = targetHeroId;
-                } else {
-                    this.roster[sourceSlot] = targetHeroId;
-                }
-                //put the hero in target location
-                if (targetLocation === 'battlefield') {
-                    this.battlefield[targetSlot] = sourceHeroId
-                } else {
-                    this.roster[targetSlot] = sourceHeroId
-                }
+        moveHero(sourceHeroId: string, sourceLocation: string, sourceSlot: number, targetLocation: string, targetSlot: number) {
+            //clear the source location
+            if (sourceLocation === 'battlefield') {
+                this.battlefield[sourceSlot] = undefined
+            } else {
+                this.roster[sourceSlot] = undefined
+            }
+            //put the hero in target location
+            if (targetLocation === 'battlefield') {
+                this.battlefield[targetSlot] = sourceHeroId
+            } else {
+                this.roster[targetSlot] = sourceHeroId
+            }
         },
-        clearSelection(){
+        swapHeroes(sourceHeroId: string, sourceLocation: string, sourceSlot: number, targetHeroId: string, targetLocation: string, targetSlot: number) {
+            //put target hero in source location
+            if (sourceLocation === 'battlefield') {
+                this.battlefield[sourceSlot] = targetHeroId;
+            } else {
+                this.roster[sourceSlot] = targetHeroId;
+            }
+            //put the hero in target location
+            if (targetLocation === 'battlefield') {
+                this.battlefield[targetSlot] = sourceHeroId
+            } else {
+                this.roster[targetSlot] = sourceHeroId
+            }
+        },
+        clearSelection() {
             this.selectedHero = this.selectedHeroSource = this.selectedHeroSlot = undefined;
         },
 
@@ -206,63 +206,89 @@ export const useCombatStore = defineStore('combat', {
 
             const frontRowSlots = [0, 1, 2];
             const sortedFront = frontRowSlots.sort((a, b) => {
-                const distA = Math.abs(heroColumn - a)  // distance from hero's column to slot a
-                const distB = Math.abs(heroColumn - b)  // distance from hero's column to slot b
-                if (distA !== distB) return distA - distB  // return closer one first
-                return a - b  // if same distance, return left one first
+                const distA = Math.abs(heroColumn - a)
+                const distB = Math.abs(heroColumn - b)
+                if (distA !== distB) return distA - distB
+                return a - b
             })
             for (let slot of sortedFront) {
                 if (targetArray[slot] !== undefined) {
-                    return slot  // Found a target!
+                    return slot;
                 }
             }
             //now same for back row
             const backRowSlots = [3, 4, 5];
             const sortedBack = backRowSlots.sort((a, b) => {
-                const distA = Math.abs(heroColumn - (a % 3))  // distance from hero's column to slot a's column
-                const distB = Math.abs(heroColumn - (b % 3))  // distance from hero's column to slot b's column
-                if (distA !== distB) return distA - distB
-                return a - b
+                const distA = Math.abs(heroColumn - (a % 3));
+                const distB = Math.abs(heroColumn - (b % 3));
+                if (distA !== distB) return distA - distB;
+                return a - b;
             })
 
             for (let slot of sortedBack) {
                 if (targetArray[slot] !== undefined) {
-                    return slot
+                    return slot;
                 }
             }
 
             return null; //no targets
         },
 
+        findRangedTarget(heroSlot: number, targetArray: (string | undefined)[]): number | null {
+            const heroColumn = heroSlot % 3;
+
+            //check own column front + back
+            if (targetArray[heroColumn] !== undefined) return heroColumn;
+            if (targetArray[heroColumn + 3] !== undefined) return heroColumn;
+
+            //check other columns
+            const otherColumns = [0, 1, 2].filter(c => c !== heroColumn);
+            const sortedColumns = otherColumns.sort((a, b) => Math.abs(heroColumn - a) - Math.abs(heroColumn - b));
+
+            for (let col of sortedColumns) {
+                //check front row for this column
+                if (targetArray[col] !== undefined) return col;
+
+                //check back row for this column
+                if (targetArray[col + 3] !== undefined) return col + 3;
+            }
+
+            return null;
+        },
+
 
         applyAttacks(attackers: (string | undefined)[], defenders: (string | undefined)[]) {
             const stats = useEntityStatsStore()
-            
+            const heroes = useHeroesStore()
+
             for (let i = 0; i < attackers.length; i++) {
                 const attackerId = attackers[i]
                 if (attackerId) {
-                    const targetSlot = this.findMeleeTarget(i, defenders)
+                    let targetSlot = null as null | number;
+                    if (heroes.roster.find((h: Entity) => h.id === attackerId)?.equipment.weapon?.targetingType === "ranged") {
+                        targetSlot = this.findMeleeTarget(i, defenders)
+
+                    } else { targetSlot = this.findRangedTarget(i, defenders) }
+
+
                     if (targetSlot !== null) {
-                        const defenderId = defenders[targetSlot]
                         const attacker = this.entityById(attackerId)
+                        const defenderId = defenders[targetSlot]
                         const defender = this.entityById(defenderId)
                         if (attacker && defender) {
-                            const acc = attacker.dex * 2 + attacker.agi * 0.5
-                            const eva = defender.agi * 2 + defender.dex * 0.5
                             const chance = stats.hitChance(attacker, defender)
                             const roll = Math.random()
-                            
+
                             console.log(`${attacker.name} attacks ${defender.name}:`)
-                            console.log(`  Accuracy: ${acc.toFixed(1)} vs Evasion: ${eva.toFixed(1)}`)
                             console.log(`  Hit chance: ${(chance * 100).toFixed(1)}%`)
                             console.log(`  Roll: ${roll.toFixed(2)} — ${roll < chance ? 'HIT' : 'MISS'}`)
-                            
+
                             if (roll < chance) {
                                 const rawDamage = stats.physicalPower(attacker)
                                 const defenderDef = stats.physicalDefense(defender)
                                 const mitigated = rawDamage * (stats.physicalPower(attacker) / (stats.physicalPower(attacker) + defenderDef))
                                 defender.hp -= mitigated
-                                
+
                                 console.log(`  Physical Power: ${rawDamage.toFixed(1)} vs Physical Defense: ${defenderDef.toFixed(1)}`)
                                 console.log(`  Damage after mitigation: ${mitigated.toFixed(2)}`)
                                 console.log(`  ${defender.name} HP: ${defender.hp.toFixed(2)} / ${stats.maxHealth(defender)}`)
